@@ -7,24 +7,24 @@
 #Configuration management: ansible
 
 #Update system:
-sudo apt-get update -y
-sudo apt-get upgrade -y
+sudo yum update -y
+sudo yum upgrade -y
 
 #Basic dev setup
-sudo apt-get install -y unzip python emacs vim curl git 
+sudo yum install -y unzip python emacs vim curl git 
 
-#Install Pip and AWSCLI
-sudo apt-get install -y python-pip python-dev build-essential 
+#Install Pip AWSCLI and the requests module of pip 
+sudo yum install -y python-pip python-dev build-essential 
 sudo pip install --upgrade pip 
 sudo pip install --upgrade virtualenv 
-sudo pip install boto boto3
-sudo apt-get install -y awscli
+sudo pip install boto boto3 requests
+sudo yum install -y awscli
 
 #Install Ansible:
-sudo apt-get install -y ansible 
+sudo yum install -y ansible 
 
 #Install and enable openssh
-sudo apt-get install -y openssh-server
+sudo yum install -y openssh-server
 sudo service ssh start
 sudo systemctl enable ssh
 
@@ -41,11 +41,9 @@ unzip /tmp/vault_0.10.0_linux_amd64.zip
 sudo mv /tmp/vault /usr/bin/vault
 
 #Install Azure CLI:
-export AZ_REPO=$(lsb_release -cs)
-sudo echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-sudo apt-get install apt-transport-https
-sudo apt-get update && sudo apt-get install azure-cli
-curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+sudo yum install azure-cli
 
 #Install JDK 8u171:
 wget http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz -O /tmp/jdk-8u171-linux-x64.tar.gz
@@ -62,11 +60,10 @@ sudo update-alternatives --set javac /usr/local/java/jdk1.8.0_171/jre/bin/javac
 sudo update-alternatives --set javaws /usr/local/java/jdk1.8.0_171/jre/bin/javaws
 
 #Install Maven 3.3.9:
-cd /opt/
-sudo wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
-sudo tar -xvzf apache-maven-3.3.9-bin.tar.gz
-sudo mv apache-maven-3.3.9 maven 
-sudo echo "export M2_HOME=/opt/maven" >> /etc/profile.d/mavenenv.sh
-sudo echo "export PATH=${M2_HOME}/bin:${PATH}" >> /etc/profile.d/mavenenv.sh
-sudo chmod +x /etc/profile.d/mavenenv.sh
-sudo source /etc/profile.d/mavenenv.sh
+cd /tmp
+wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+tar xzf apache-maven-3.3.9-bin.tar.gz
+sudo mkdir /usr/local/maven
+sudo mv apache-maven-3.3.9/ /usr/local/maven/
+sudo alternatives --install /usr/bin/mvn mvn /usr/local/maven/apache-maven-3.3.9/bin/mvn 1
+sudo alternatives --config mvn

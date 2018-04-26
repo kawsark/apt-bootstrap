@@ -1,2 +1,3 @@
-# apt-bootstrap
-Bootstrap script for a basic linux dev server with apt-get based software management
+# linux-bootstrap
+Bootstrap script for a basic linux dev server
+apt-get and yum based commands are added here
