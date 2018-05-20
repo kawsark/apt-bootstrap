@@ -3,7 +3,8 @@
 #Bootstrap script for a ubuntu dev server.
 #Dev setup: ssh server, python, pip, Java (JDK), maven 
 #Cloud CLI: aws cli, azure cli, 
-#Hashicorp tools: vault, terraform
+#Hypervisor: virtualbox
+#Hashicorp tools: vault, terraform, vagrant
 #Configuration management: ansible
 
 #Update system:
@@ -40,10 +41,19 @@ wget https://releases.hashicorp.com/vault/0.10.0/vault_0.10.0_linux_amd64.zip -O
 unzip /tmp/vault_0.10.0_linux_amd64.zip
 sudo mv /tmp/vault /usr/bin/vault
 
+#Install Vagrant 2.1.1:
+cd /tmp
+wget wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_linux_amd64.zip
+unzip vagrant_2.1.1_linux_amd64.zip
+sudo mv /tmp/vagrant /usr/bin/vagrant
+
+#Install virtualbox
+sudo yum install -y virtualbox
+
 #Install Azure CLI:
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-sudo yum install azure-cli
+sudo yum install -y azure-cli
 
 #Install JDK 8u171:
 wget http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz -O /tmp/jdk-8u171-linux-x64.tar.gz

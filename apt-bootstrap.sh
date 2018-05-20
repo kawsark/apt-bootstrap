@@ -2,8 +2,9 @@
 
 #Bootstrap script for a ubuntu dev server.
 #Dev setup: ssh server, python, pip, Java (JDK), maven 
-#Cloud CLI: aws cli, azure cli, 
-#Hashicorp tools: vault, terraform
+#Cloud CLI: aws cli, azure cli,
+#Hypervisor: virtualbox
+#Hashicorp tools: vault, terraform, vagrant
 #Configuration management: ansible
 
 #Update system:
@@ -40,11 +41,20 @@ wget https://releases.hashicorp.com/vault/0.10.0/vault_0.10.0_linux_amd64.zip -O
 unzip /tmp/vault_0.10.0_linux_amd64.zip
 sudo mv /tmp/vault /usr/bin/vault
 
+#Install Vagrant 2.1.1:
+cd /tmp
+wget wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_linux_amd64.zip
+unzip vagrant_2.1.1_linux_amd64.zip
+sudo mv /tmp/vagrant /usr/bin/vagrant
+
+#Install virtualbox
+sudo apt-get install -y virtualbox
+
 #Install Azure CLI:
 export AZ_REPO=$(lsb_release -cs)
 sudo echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-sudo apt-get install apt-transport-https
-sudo apt-get update && sudo apt-get install azure-cli
+sudo apt-get install -y apt-transport-https
+sudo apt-get update -y && sudo apt-get install -y azure-cli
 curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 
 #Install JDK 8u171:
